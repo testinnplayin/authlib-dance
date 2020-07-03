@@ -1,9 +1,7 @@
 import json
 
-from authlib.integrations.httpx_client import AsyncOAuth2Client
+from authlib.integrations.requests_client import OAuth2Session
 from flask import Flask, redirect, render_template, request
-
-from src.controllers.auth_controller import AuthController
 
 
 app = Flask(__name__)
@@ -23,7 +21,7 @@ client_secret = config_info['client_secret']
 redirect_uri = f'{redirection_url}/test'
 
 
-client = AsyncOAuth2Client(client_id, client_secret, redirect_uri=redirect_uri)
+client = OAuth2Session(client_id, client_secret, redirect_uri=redirect_uri)
 state = ''
 
 
@@ -37,17 +35,10 @@ def authorize():
     github_auth_url = 'https://github.com/login/oauth/authorize'
     
     if request.args.get('api') == 'gh':
-        # config_info = opener()
-        # redirection_url = config_info['redirection_url']
-        # client_id = config_info['client_id']
-        # client_secret = config_info['client_secret']
-
-        
         github_auth_url = 'https://github.com/login/oauth/authorize'
 
-        # client = AsyncOAuth2Client(client_id, client_secret, redirect_uri=redirect_uri)
-
         uri, state = client.create_authorization_url(github_auth_url)
+        print('uri ', uri)
         return redirect(uri)
 
 
